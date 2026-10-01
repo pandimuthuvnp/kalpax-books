@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KalpaX Books</title>
+<link rel="icon" href="assets/logo.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#E52421; --red-d:#B81B18; --ink:#111; --ink2:#3a3a3a; --mute:#767676;
+  --bg:#f7f6f4; --card:#fff; --line:#e7e4df; --ok:#14834a; --ok-bg:#e7f6ee;
+  --no:#b42318; --no-bg:#fdeceb; --warn:#8a5a00; --warn-bg:#fff4dc;
+  --r:14px; --sh:0 1px 2px rgba(0,0,0,.05),0 6px 20px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,"Noto Sans Tamil",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input{font:inherit}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+
+/* header */
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
+.hd{display:flex;align-items:center;gap:18px;height:68px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{height:46px;width:46px;object-fit:cover;object-position:center;border-radius:10px}
+.brand b{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.brand b span{color:var(--red)}
+.brand small{display:block;font-size:11px;color:var(--mute);font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+nav{display:flex;gap:4px;margin-left:12px}
+nav a{padding:8px 12px;border-radius:8px;font-size:14px;font-weight:500;color:var(--ink2);text-decoration:none}
+nav a:hover{background:#f2f0ec}
+.hd .sp{flex:1}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px}
+.btn-red{background:var(--red);color:#fff}.btn-red:hover{background:var(--red-d)}
+.btn-dark{background:var(--ink);color:#fff}
+.btn-ghost{border:1px solid var(--line);background:#fff}.btn-ghost:hover{border-color:#cfcac2}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.me{display:flex;align-items:center;gap:10px}
+.av{width:38px;height:38px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font-weight:700}
+.me .n{font-weight:700;font-size:14px}.me .r{font-size:12px;color:var(--mute)}
+
+/* hero */
+.hero{padding:44px 0 26px}
+.hero h1{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.hero h1 em{font-style:normal;color:var(--red)}
+.hero p{color:var(--ink2);margin-top:10px;max-width:640px}
+.stats{display:flex;gap:28px;margin-top:22px;flex-wrap:wrap}
+.stats div b{font-size:26px;font-weight:800;display:block}
+.stats div span{font-size:13px;color:var(--mute)}
+
+/* topics */
+h2.sec{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:34px 0 14px;display:flex;align-items:center;gap:10px}
+h2.sec .tag{font-size:12px;font-weight:600;background:#fff;border:1px solid var(--line);padding:3px 9px;border-radius:99px;color:var(--mute)}
+.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.topic{display:flex;flex-direction:column;justify-content:flex-start;gap:2px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;text-align:left;transition:.15s}
+.topic:hover,.topic.on{border-color:var(--ink);box-shadow:var(--sh)}
+.topic .ic{font-size:22px}
+.topic b{display:block;font-size:15px}
+.topic span{font-size:12.5px;color:var(--mute)}
+
+/* toolbar */
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:26px 0 6px}
+.search{flex:1;min-width:220px;position:relative}
+.search input{width:100%;padding:12px 14px 12px 40px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:14px}
+.search input:focus{outline:2px solid var(--ink);outline-offset:-1px}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--mute)}
+.seg{display:flex;background:#fff;border:1px solid var(--line);border-radius:12px;padding:3px}
+.seg button{padding:8px 12px;border-radius:9px;font-size:13px;font-weight:600;color:var(--ink2)}
+.seg button.on{background:var(--ink);color:#fff}
+select{padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;font:inherit;font-size:13px;font-weight:600}
+
+/* grid */
+.genre-h{font-size:17px;font-weight:700;margin:28px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}
+.genre-h span{font-size:13px;color:var(--mute);font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px}
+.bk{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);display:flex;flex-direction:column;text-align:left;transition:transform .15s}
+.bk:hover{transform:translateY(-3px)}
+.cv{aspect-ratio:3/4;background:#efece7;position:relative;overflow:hidden}
+.cv img{width:100%;height:100%;object-fit:cover}
+.bk.member{outline:3px solid var(--red);outline-offset:-3px}
+.mem{display:flex;align-items:center;gap:10px;background:var(--red);color:#fff;padding:10px 12px;line-height:1.15}
+.mem img{width:34px;height:34px;border-radius:7px;object-fit:cover;flex:none;border:2px solid #fff}
+.mem b{display:block;font-size:13.5px;font-weight:800;text-transform:uppercase;letter-spacing:.03em}
+.mem small{display:block;font-size:11.5px;opacity:.9;margin-top:2px}
+.mem-big{border-radius:14px;padding:16px 18px;margin:14px 0 4px;gap:14px}
+.det .mem-big img{width:52px;height:52px;border-radius:10px;box-shadow:none;flex:none}
+.mem-big b{font-size:19px}
+.mem-big small{font-size:13px}
+.cv .lang{position:absolute;top:10px;left:10px;background:rgba(17,17,17,.82);color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px}
+.bd{padding:12px 14px 14px;display:flex;flex-direction:column;gap:4px;flex:1}
+.bd .t{font-weight:700;font-size:14.5px;line-height:1.25}
+.bd .a{font-size:12.5px;color:var(--mute)}
+.bd .m{font-size:12px;color:var(--mute);margin-top:2px}
+.st{margin-top:auto;padding-top:10px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 9px;border-radius:99px}
+.pill i{width:7px;height:7px;border-radius:50%;background:currentColor}
+.ok{background:var(--ok-bg);color:var(--ok)}.no{background:var(--no-bg);color:var(--no)}
+.st small{display:block;font-size:12px;color:var(--ink2);margin-top:6px}
+.empty{padding:50px;text-align:center;color:var(--mute)}
+
+/* contribute */
+.contrib{background:var(--ink);color:#fff;border-radius:20px;padding:30px;margin-top:40px}
+.contrib h3{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.contrib p{color:#bdbdbd;margin-top:6px;font-size:14px}
+.copts{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:20px}
+.copt{background:#1e1e1e;border:1px dashed #444;border-radius:14px;padding:16px;cursor:not-allowed;opacity:.9}
+.copt b{display:block;margin:6px 0 4px}
+.copt span{font-size:12.5px;color:#a9a9a9}
+.soon{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:var(--red);color:#fff;padding:2px 7px;border-radius:5px;margin-top:10px}
+
+/* my area */
+.mine{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;margin-top:34px}
+.warn{display:flex;gap:12px;background:var(--warn-bg);color:var(--warn);border:1px solid #f1d9a6;border-left:4px solid #d99a1e;border-radius:8px;padding:12px 14px;font-size:14px;margin:12px 0 16px}
+.rows{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;gap:14px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:12px}
+.row img{width:48px;height:64px;object-fit:cover;border-radius:6px}
+.row .x{flex:1}.row .x b{font-size:14px}.row .x div{font-size:12.5px;color:var(--mute)}
+.due{font-size:13px;font-weight:700;text-align:right}
+.due small{display:block;font-weight:500;color:var(--mute)}
+.tabs{display:flex;gap:6px;margin-top:6px}
+.tabs button{padding:8px 14px;border-radius:9px;font-weight:600;font-size:14px;color:var(--mute)}
+.tabs button.on{background:#f2f0ec;color:var(--ink)}
+
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.ov.show{display:flex}
+.md{background:#fff;border-radius:20px;max-width:760px;width:100%;max-height:92vh;overflow:auto;position:relative}
+.md .cl{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:#f2f0ec;font-size:18px;z-index:2}
+.det{display:grid;grid-template-columns:240px 1fr;gap:24px;padding:24px}
+.det img{width:100%;border-radius:12px;box-shadow:var(--sh)}
+.det h3{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.15;padding-right:30px}
+.det .by{color:var(--ink2);margin-top:4px}
+.kv{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0}
+.kv div{background:#f7f6f4;border-radius:10px;padding:9px 11px}
+.kv span{display:block;font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.kv b{font-size:14px}
+.desc{font-size:14px;color:var(--ink2)}
+.holders{margin-top:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.holders .h{padding:9px 12px;background:#f7f6f4;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}
+.holders .c{display:flex;justify-content:space-between;padding:10px 12px;border-top:1px solid var(--line);font-size:13.5px}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.note{font-size:13px;margin-top:12px;padding:10px 12px;border-radius:10px}
+.login{padding:30px;max-width:400px}
+.login img{width:64px;height:64px;object-fit:cover;border-radius:12px}
+.login h3{font-size:22px;font-weight:800;margin:12px 0 4px}
+.login p{color:var(--mute);font-size:14px;margin-bottom:16px}
+.fld{display:block;margin-bottom:12px}
+.fld span{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
+.fld input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px}
+.err{color:var(--no);font-size:13px;min-height:18px;margin-bottom:6px}
+.hint{font-size:12px;color:var(--mute);margin-top:12px;background:#f7f6f4;padding:8px 10px;border-radius:8px}
+
+/* chat */
+.fab{position:fixed;right:20px;bottom:20px;z-index:40;padding:13px 20px;border-radius:99px;font-weight:600;font-size:14px;background:var(--ink);color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.25);display:grid;place-items:center}
+.fab b{position:absolute;top:-2px;right:-2px;background:var(--red);font-size:10px;padding:2px 6px;border-radius:99px}
+.chat{position:fixed;right:20px;bottom:92px;width:380px;max-width:calc(100vw - 32px);height:560px;max-height:calc(100vh - 120px);background:#fff;border-radius:18px;box-shadow:0 16px 50px rgba(0,0,0,.25);z-index:41;display:none;flex-direction:column;overflow:hidden}
+.chat.show{display:flex}
+.ch{background:var(--ink);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px}
+.ch .dot{width:9px;height:9px;border-radius:50%;background:#3ddc84}
+.ch b{flex:1}.ch button{opacity:.8}
+.keybox{padding:10px 12px;background:#f7f6f4;border-bottom:1px solid var(--line);font-size:12px}
+.keybox .r{display:flex;gap:6px;margin-top:6px}
+.keybox input{flex:1;padding:7px 9px;border:1px solid var(--line);border-radius:8px;font-size:12px;min-width:0}
+.keybox button{padding:7px 10px;background:var(--ink);color:#fff;border-radius:8px;font-size:12px;font-weight:600}
+.msgs{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.mg{max-width:85%;padding:9px 12px;border-radius:14px;font-size:13.5px;white-space:pre-wrap}
+.mg.u{align-self:flex-end;background:var(--red);color:#fff;border-bottom-right-radius:4px}
+.mg.b{align-self:flex-start;background:#f2f0ec;border-bottom-left-radius:4px}
+.sugg{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 8px}
+.sugg button{font-size:12px;border:1px solid var(--line);padding:5px 9px;border-radius:99px}
+.ci{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line)}
+.ci input{flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:14px}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;z-index:60;transition:.3s;max-width:90vw}
+.toast.show{transform:translateX(-50%) translateY(0)}
+footer{padding:40px 0 100px;color:var(--mute);font-size:13px;text-align:center}
+.brand b,nav a,.me .n{white-space:nowrap}
+@media (max-width:980px){ nav{display:none} }
+@media (max-width:760px){
+  .det{grid-template-columns:1fr}.det img{max-width:200px}
+  .me .txt{display:none}
+  .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap hd">
+    <div class="brand">
+      <img src="assets/logo.jpg" alt="KalpaX logo">
+      <div><b>Kalpa<span>X</span> Books</b><small>Community library</small></div>
+    </div>
+    <nav>
+      <a href="#topics">Topics</a>
+      <a href="#catalog">Catalogue</a>
+      <a href="#mine" id="navMine" style="display:none">My books</a>
+      <a href="#contribute">Contribute</a>
+    </nav>
+    <div class="sp"></div>
+    <div id="authSlot"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Borrow a book from the <em>KalpaX</em> shelf.</h1>
+    <p>Books shared by KalpaX members. See what's available, who has the ones that aren't, and when they're due back.</p>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <section id="mine"></section>
+
+  <h2 class="sec" id="topics">Topics <span class="tag" id="topicCount"></span></h2>
+  <div class="topics" id="topicGrid"></div>
+
+  <div id="catalog" class="bar">
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" placeholder="Search title, author, language, topic…">
+    </div>
+    <div class="seg" id="avSeg">
+      <button data-v="all" class="on">All</button>
+      <button data-v="avail">Available</button>
+      <button data-v="out">Borrowed</button>
+    </div>
+    <select id="lang"><option value="">All languages</option></select>
+  </div>
+  <div id="shelf"></div>
+
+  <section class="contrib" id="contribute">
+    <h3>Contribute to KalpaX</h3>
+    <p>Members can add their own books to the shelf. These options open after the demo.</p>
+    <div class="copts">
+      <div class="copt" title="Coming soon"><b>Lend a physical book</b><span>List a book you own; you stay the owner and pick the lending period.</span><br><span class="soon">Coming soon</span></div>
+      <div class="copt" title="Coming soon"><b>Upload a PDF</b><span>Share a digital copy with your name stamped as the owner.</span><br><span class="soon">Coming soon</span></div>
+      <div class="copt" title="Coming soon"><b>Donate a book</b><span>Hand a book over to the KalpaX shelf permanently.</span><br><span class="soon">Coming soon</span></div>
+      <div class="copt" title="Coming soon"><b>Request a title</b><span>Ask members for a book that isn't on the shelf yet.</span><br><span class="soon">Coming soon</span></div>
+      <div class="copt" title="Coming soon"><b>Write a review</b><span>Tell other readers what a book is worth.</span><br><span class="soon">Coming soon</span></div>
+      <div class="copt" title="Coming soon"><b>Bulk add a collection</b><span>Add a whole shelf at once from photos of the covers.</span><br><span class="soon">Coming soon</span></div>
+    </div>
+  </section>
+</main>
+<footer>© 2026 KalpaX · Books portal demo</footer>
+
+<!-- modals -->
+<div class="ov" id="ov"><div class="md" id="md"></div></div>
+
+<button class="fab" id="fab" aria-label="Open AI assistant">
+  Ask KalpaX
+</button>
+<div class="chat" id="chat">
+  <div class="ch"><span class="dot"></span><b>KalpaX AI · Book assistant</b><button id="chatX">✕</button></div>
+  <div class="keybox">
+    <span id="keyState">Paste your Grok (xAI) API key to enable AI answers. Without a key, the assistant answers from the catalogue only.</span>
+    <div class="r"><input id="key" type="password" placeholder="xai-…"><input id="model" style="max-width:110px" value="grok-3-mini" title="Grok model"><button id="saveKey">Save</button></div>
+  </div>
+  <div class="msgs" id="msgs"></div>
+  <div class="sugg" id="sugg">
+    <button>Which trading books are available?</button>
+    <button>Who has Rich Dad Poor Dad?</button>
+    <button>Suggest a Tamil book</button>
+  </div>
+  <form class="ci" id="cf"><input id="ci" placeholder="Ask about any book…" autocomplete="off"><button class="btn btn-red" style="padding:10px 14px">Send</button></form>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ "Backend" (demo data, in-browser) ============ */
+const TODAY = new Date('2026-10-01');
+const MAX_ACTIVE = 3;
+
+const USERS = {
+  // demo account
+  'Kaxi3520': { pass: 'kaxi89929', name: 'Harithi', role: 'Core member @KalpaX', email: 'harithi@kalpax.demo' }
+};
+
+const OWNERS = {
+  'Aadhithyavarman': 'Techlead@KalpaX',
+  'Sentamizhan': 'Member@KalpaX',
+  'Nithyasree': 'Core member@KalpaX',
+  'Pandimuthu': 'Member@KalpaX'
+};
+const ownerLabel = o => OWNERS[o] ? `${o} · ${OWNERS[o]}` : o;
+
+const GENRES = {
+  'Trading':          { d:'Traders, speculation and market psychology' },
+  'Investing':        { d:'Value investing and stock picking' },
+  'Personal Finance': { d:'Money habits, wealth and financial freedom' },
+  'Self-Help':        { d:'Mindset, success and relationships' },
+  'History & Economics': { d:'Markets and crashes through history' },
+  'Health':           { d:'Natural remedies and wellness (Tamil)' },
+  'Fiction':          { d:'Stories and adventure' }
+};
+
+// owner = person who contributed the book (stamped on the PDF)
+const BOOKS = [
+ {id:1, img:'books/book01.jpg', alt:'books/book02.jpg', title:'Reminiscences of a Stock Operator', author:'Edwin Lefèvre', genre:'Trading', lang:'English', pages:304, year:1923, publisher:'Jaico', owner:'Aadhithyavarman',
+  desc:'A thinly fictionalised biography of Jesse Livermore — the classic on speculation, tape reading and trader psychology.', copies:2,
+  loans:[{who:'Sahana V', due:'2026-10-12'}]},
+ {id:2, img:'books/book03.jpg', title:'Ocean Gaurd 1', author:'Sentamizhan', genre:'Fiction', lang:'English', pages:180, year:2024, publisher:'Self-published', owner:'Sentamizhan', member:true,
+  desc:'An underwater adventure set in a vibrant coral world — the first part of the Ocean Gaurd series, written by KalpaX member Sentamizhan.', copies:5, loans:[]},
+ {id:3, img:'books/book04.jpg', title:'Think and Grow Rich', author:'Napoleon Hill', genre:'Self-Help', lang:'English', pages:238, year:1937, publisher:'—', owner:'Nithyasree',
+  desc:'Thirteen principles of personal achievement drawn from interviews with successful people of the early 20th century.', copies:2,
+  loans:[{who:'Mithunchandar', due:'2026-10-08'},{who:'Tamilamudhan', due:'2026-10-15'}]},
+ {id:4, img:'books/book05.jpg', title:'One Up on Wall Street', author:'Peter Lynch with John Rothchild', genre:'Investing', lang:'English', pages:304, year:1989, publisher:'Simon & Schuster', owner:'Aadhithyavarman',
+  desc:'How ordinary investors can use what they already know to find great stocks before the professionals do.', copies:1,
+  loans:[{who:'Harithi', id:'Kaxi3520', due:'2026-10-10', from:'2026-09-19'}]},
+ {id:5, img:'books/book06.jpg', title:'Security Analysis (6th Edition)', author:'Benjamin Graham & David L. Dodd', genre:'Investing', lang:'English', pages:766, year:2008, publisher:'McGraw Hill', owner:'Pandimuthu',
+  desc:'The foundational text of fundamental analysis, with a foreword by Warren Buffett and commentary by Seth Klarman and others.', copies:1, loans:[]},
+ {id:6, img:'books/book07.jpg', title:'Market Wizards', author:'Jack D. Schwager', genre:'Trading', lang:'English', pages:458, year:1989, publisher:'Wiley', owner:'Aadhithyavarman',
+  desc:'Interviews with top futures and currency traders on how they think, win and manage risk.', copies:1,
+  loans:[{who:'Pandimuthu', due:'2026-10-06'}]},
+ {id:7, img:'books/book08.jpg', title:'The Intelligent Investor', author:'Benjamin Graham', genre:'Investing', lang:'English', pages:623, year:1949, publisher:'HarperBusiness', owner:'Aadhithyavarman',
+  desc:'The definitive book on value investing — margin of safety, Mr. Market and the defensive investor. Commentary by Jason Zweig.', copies:3,
+  loans:[{who:'Harithi', id:'Kaxi3520', due:'2026-10-07', from:'2026-09-16'},{who:'Akhilesh', due:'2026-10-18'}]},
+ {id:8, img:'books/book09.jpg', title:'Beating the Street', author:'Peter Lynch with John Rothchild', genre:'Investing', lang:'English', pages:336, year:1993, publisher:'Simon & Schuster', owner:'Pandimuthu',
+  desc:"Lynch's 21 golden rules and how he picked stocks while running the Magellan Fund.", copies:1, loans:[]},
+ {id:9, img:'books/book10.jpg', title:'Give and Take', author:'Adam Grant', genre:'Self-Help', lang:'English', pages:320, year:2013, publisher:'Weidenfeld & Nicolson', owner:'Nithyasree',
+  desc:'Why helping others drives our success — givers, takers and matchers at work.', copies:1, loans:[]},
+ {id:10, img:'books/book11.jpg', title:'Stock Market Wizards', author:'Jack D. Schwager', genre:'Trading', lang:'English', pages:480, year:2001, publisher:'HarperBusiness', owner:'Aadhithyavarman',
+  desc:"Interviews with America's top stock traders — revised and updated.", copies:1,
+  loans:[{who:'Sentamizhan', due:'2026-10-09'}]},
+ {id:11, img:'books/book12.jpg', title:'The Millionaire Fastlane', author:'MJ DeMarco', genre:'Personal Finance', lang:'English', pages:336, year:2011, publisher:'Jaico', owner:'Aadhithyavarman',
+  desc:'Crack the code to wealth: why the slow lane of saving and waiting rarely works, and what to do instead.', copies:1,
+  loans:[{who:'Harithi', id:'Kaxi3520', due:'2026-10-14', from:'2026-09-23'}]},
+ {id:12, img:'books/book13.jpg', title:'நாட்டு மருந்துக் கடை (Naattu Marundhu Kadai)', author:'Dr. Ku. Sivaraman', genre:'Health', lang:'Tamil', pages:192, year:2016, publisher:'Vikatan Prasuram', owner:'Nithyasree',
+  desc:'A guide to traditional Tamil home remedies — ginger, spices and herbs from the country medicine shop.', copies:1, loans:[]},
+ {id:13, img:'books/book14.jpg', title:'Rich Dad Poor Dad', author:'Robert T. Kiyosaki', genre:'Personal Finance', lang:'English', pages:336, year:1997, publisher:'Plata Publishing', owner:'Aadhithyavarman',
+  desc:'What the rich teach their kids about money that the poor and middle class do not.', copies:2,
+  loans:[{who:'Tamilamudhan', due:'2026-10-05'},{who:'Pandimuthu', due:'2026-10-11'}]},
+ {id:14, img:'books/book15.jpg', title:'The Psychology of Money', author:'Morgan Housel', genre:'Personal Finance', lang:'English', pages:252, year:2020, publisher:'Jaico', owner:'Nithyasree',
+  desc:'Timeless lessons on wealth, greed and happiness — why behaviour matters more than knowledge.', copies:2,
+  loans:[{who:'Mithunchandar', due:'2026-10-13'}]},
+ {id:15, img:'books/book16.jpg', title:'The New Market Wizards', author:'Jack D. Schwager', genre:'Trading', lang:'English', pages:493, year:1992, publisher:'HarperBusiness', owner:'Pandimuthu',
+  desc:"Conversations with America's top traders — the second volume of the Market Wizards series.", copies:1, loans:[]},
+ {id:16, img:'books/book17.jpg', title:'நம் நலம் நம் கையில் — பாகம் 1 (Health in Your Hands, Vol. 1)', author:'Dr. Devendra Vora, M.D.', genre:'Health', lang:'Tamil', pages:248, year:2004, publisher:'Navneet', owner:'Nithyasree',
+  desc:'Acupressure and natural therapies you can practise yourself — Tamil edition, volume 1.', copies:1, loans:[]},
+ {id:17, img:'books/book18.jpg', title:'The Great Crash 1929', author:'John Kenneth Galbraith', genre:'History & Economics', lang:'English', pages:206, year:1955, publisher:'Mariner Books', owner:'Pandimuthu',
+  desc:'The story of the 1929 stock market crash and the delusion that came before it.', copies:1,
+  loans:[{who:'Sahana V', due:'2026-10-20'}]},
+ {id:18, img:'books/book19.jpg', title:'The Millionaire Next Door', author:'Thomas J. Stanley & William D. Danko', genre:'Personal Finance', lang:'English', pages:272, year:1996, publisher:'Taylor Trade', owner:'Nithyasree',
+  desc:"The surprising secrets of America's wealthy — frugality, not flash. 20th anniversary edition.", copies:1, loans:[]},
+ {id:19, img:'books/book20.jpg', title:'13 Steps to Bloody Good Wealth', author:'Ashwin Sanghi & Sunil Dalal', genre:'Personal Finance', lang:'English', pages:232, year:2019, publisher:'Westland', owner:'Pandimuthu',
+  desc:'A practical, India-focused guide to saving, investing and building long-term wealth.', copies:1, loans:[]}
+];
+
+/* ============ state ============ */
+const store = {
+  get(k,d){ try{ const v = localStorage.getItem('kx_'+k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem('kx_'+k, JSON.stringify(v)); }catch(e){} }
+};
+let user = store.get('user', null);
+let wishlist = store.get('wish', []);
+let filter = { genre:'', av:'all', lang:'', q:'' };
+let mineTab = 'borrowed';
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const avail = b => b.copies - b.loans.length;
+const fmt = d => new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+const daysTo = d => Math.round((new Date(d) - TODAY) / 864e5);
+const nextReturn = b => b.loans.map(l=>l.due).sort()[0];
+const myLoans = () => user ? BOOKS.flatMap(b => b.loans.filter(l=>l.id===user.id).map(l=>({b,l}))) : [];
+
+function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('show'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),3400); }
+
+/* ============ render ============ */
+function renderAuth(){
+  if(user){
+    $('#authSlot').innerHTML = `<div class="me"><div class="av">${esc(user.name[0])}</div><div class="txt"><div class="n">${esc(user.name)}</div><div class="r">${esc(user.role)}</div></div><button class="btn btn-ghost" id="logout" style="margin-left:6px">Log out</button></div>`;
+    $('#logout').onclick = () => { user=null; store.set('user',null); renderAll(); toast('Logged out'); };
+    $('#navMine').style.display='';
+  } else {
+    $('#authSlot').innerHTML = `<button class="btn btn-red" id="loginBtn">Log in with KalpaX ID</button>`;
+    $('#loginBtn').onclick = () => openLogin();
+    $('#navMine').style.display='none';
+  }
+}
+
+function renderStats(){
+  const total = BOOKS.reduce((s,b)=>s+b.copies,0), out = BOOKS.reduce((s,b)=>s+b.loans.length,0);
+  $('#stats').innerHTML = `
+    <div><b>${BOOKS.length}</b><span>Titles</span></div>
+    <div><b>${total}</b><span>Copies</span></div>
+    <div><b style="color:var(--ok)">${total-out}</b><span>Available now</span></div>
+    <div><b>${Object.keys(GENRES).length}</b><span>Topics</span></div>
+    <div><b>${new Set(BOOKS.map(b=>b.lang)).size}</b><span>Languages</span></div>`;
+}
+
+function renderTopics(){
+  $('#topicCount').textContent = Object.keys(GENRES).length + ' topics';
+  const allAv = BOOKS.filter(b=>avail(b)>0).length;
+  $('#topicGrid').innerHTML = `<button class="topic ${filter.genre===''?'on':''}" data-g=""><b>All books</b><span>${BOOKS.length} titles · ${allAv} available<br>Every book on the KalpaX shelf</span></button>` + Object.entries(GENRES).map(([g,v])=>{
+    const bs = BOOKS.filter(b=>b.genre===g), a = bs.filter(b=>avail(b)>0).length;
+    return `<button class="topic ${filter.genre===g?'on':''}" data-g="${esc(g)}"><b>${esc(g)}</b><span>${bs.length} title${bs.length>1?'s':''} · ${a} available<br>${esc(v.d)}</span></button>`;
+  }).join('');
+  document.querySelectorAll('.topic').forEach(t=>t.onclick=()=>{
+    filter.genre = t.dataset.g;
+    renderTopics(); renderShelf(); $('#catalog').scrollIntoView({behavior:'smooth'});
+  });
+}
+
+function statusHTML(b){
+  const a = avail(b);
+  if(a>0) return `<span class="pill ok"><i></i>Available</span><small>${a} of ${b.copies} ${b.copies>1?'copies':'copy'} on the shelf</small>`;
+  const l = b.loans.slice().sort((x,y)=>x.due.localeCompare(y.due))[0];
+  const more = b.loans.length>1 ? ` +${b.loans.length-1} more` : '';
+  return `<span class="pill no"><i></i>Not available</span><small>With <b>${esc(l.who)}</b>${more} · back ${fmt(l.due)}</small>`;
+}
+
+function renderShelf(){
+  const q = filter.q.trim().toLowerCase();
+  const list = BOOKS.filter(b =>
+    (!filter.genre || b.genre===filter.genre) &&
+    (!filter.lang || b.lang===filter.lang) &&
+    (filter.av==='all' || (filter.av==='avail' ? avail(b)>0 : avail(b)===0)) &&
+    (!q || [b.title,b.author,b.genre,b.lang,b.owner].join(' ').toLowerCase().includes(q)));
+  if(!list.length){ $('#shelf').innerHTML = `<div class="empty">No books match these filters.</div>`; return; }
+  if(!filter.genre){
+    $('#shelf').innerHTML = `<div class="genre-h">All books <span>${list.length} title${list.length>1?'s':''}</span></div>
+      <div class="grid">${list.slice().sort((a,b)=>a.title.localeCompare(b.title)).map(card).join('')}</div>`;
+    document.querySelectorAll('.bk').forEach(c=>c.onclick=()=>openBook(+c.dataset.id));
+    return;
+  }
+  const groups = Object.keys(GENRES).filter(g=>list.some(b=>b.genre===g));
+  $('#shelf').innerHTML = groups.map(g=>{
+    const bs = list.filter(b=>b.genre===g);
+    return `<div class="genre-h">${esc(g)} <span>${bs.length} title${bs.length>1?'s':''}</span></div>
+      <div class="grid">${bs.map(card).join('')}</div>`;
+  }).join('');
+  document.querySelectorAll('.bk').forEach(c=>c.onclick=()=>openBook(+c.dataset.id));
+}
+const memLabel = (b,cls) => `<div class="mem ${cls}"><img src="assets/logo.jpg" alt=""><div><b>Written by a KalpaX member</b><small>${esc(b.author)} is one of us${cls?'. A book from our own community, proudly on the KalpaX shelf.':''}</small></div></div>`;
+const card = b => `<button class="bk${b.member?' member':''}" data-id="${b.id}">
+  <div class="cv"><img src="${b.img}" alt="${esc(b.title)} cover" loading="lazy"><span class="lang">${esc(b.lang)}</span></div>${b.member?memLabel(b,''):''}
+  <div class="bd"><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author)}</div>
+  <div class="m">${b.pages} pages · Owner: <b>${esc(b.owner)}</b>${OWNERS[b.owner]?'<br>'+esc(OWNERS[b.owner]):''}</div><div class="st">${statusHTML(b)}</div></div></button>`;
+
+function renderMine(){
+  const el = $('#mine');
+  if(!user){ el.innerHTML=''; return; }
+  const loans = myLoans(), wl = BOOKS.filter(b=>wishlist.includes(b.id));
+  const full = loans.length >= MAX_ACTIVE;
+  el.innerHTML = `<div class="mine">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <div><div style="font-size:20px;font-weight:800">${esc(user.name)}'s shelf</div><div style="color:var(--mute);font-size:13px">${esc(user.role)} · ID ${esc(user.id)}</div></div>
+      <div class="tabs"><button data-t="borrowed" class="${mineTab==='borrowed'?'on':''}">Borrowed (${loans.length})</button><button data-t="wish" class="${mineTab==='wish'?'on':''}">Wishlist (${wl.length})</button></div>
+    </div>
+    ${mineTab==='borrowed' ? `
+      ${full ? `<div class="warn"><div><b>You already have ${loans.length} books borrowed.</b> The limit is ${MAX_ACTIVE} active books — return one to borrow more.</div></div>` : ''}
+      <div class="rows">${loans.length ? loans.sort((x,y)=>x.l.due.localeCompare(y.l.due)).map(({b,l})=>{
+        const d = daysTo(l.due);
+        return `<div class="row"><img src="${b.img}" alt=""><div class="x"><b>${esc(b.title)}</b><div>${esc(b.author)} · borrowed ${fmt(l.from)} · owner ${esc(ownerLabel(b.owner))}</div></div>
+          <div class="due" style="color:${d<=7?'var(--no)':'var(--ink)'}">Return in: ${fmt(l.due)}<small>${d} day${d===1?'':'s'} left</small></div></div>`;}).join('') : '<div class="empty">No books borrowed.</div>'}</div>`
+    : `<p style="font-size:13px;color:var(--mute);margin:10px 0 12px">KalpaX AI emails <b>${esc(user.email)}</b> as soon as a wishlisted book is back on the shelf.</p>
+      <div class="rows">${wl.length ? wl.map(b=>`<div class="row"><img src="${b.img}" alt=""><div class="x"><b>${esc(b.title)}</b><div>${avail(b)>0?'Available now':'Expected back '+fmt(nextReturn(b))}</div></div>
+        <button class="btn btn-ghost" data-rm="${b.id}">Remove</button></div>`).join('') : '<div class="empty">Your wishlist is empty. Open a book that is out and tap “Add to wishlist”.</div>'}</div>`}
+  </div>`;
+  el.querySelectorAll('[data-t]').forEach(t=>t.onclick=()=>{ mineTab=t.dataset.t; renderMine(); });
+  el.querySelectorAll('[data-rm]').forEach(t=>t.onclick=()=>{ wishlist=wishlist.filter(i=>i!==+t.dataset.rm); store.set('wish',wishlist); renderMine(); });
+}
+
+function renderAll(){ renderAuth(); renderStats(); renderMine(); renderTopics(); renderShelf(); }
+
+/* ============ modals ============ */
+function openModal(html){ $('#md').innerHTML = `<button class="cl" onclick="closeModal()">✕</button>` + html; $('#ov').classList.add('show'); }
+function closeModal(){ $('#ov').classList.remove('show'); }
+$('#ov').onclick = e => { if(e.target.id==='ov') closeModal(); };
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+function openBook(id){
+  const b = BOOKS.find(x=>x.id===id), a = avail(b);
+  const mine = user && b.loans.some(l=>l.id===user.id);
+  const inWish = wishlist.includes(id);
+  let action = '', note = '';
+  if(mine){
+    note = `<div class="note ok">You have this book. Return by <b>${fmt(b.loans.find(l=>l.id===user.id).due)}</b>.</div>`;
+  } else if(a>0){
+    action = `<button class="btn btn-red" id="borrow">${user?'Borrow this book':'Log in to borrow'}</button>`;
+  } else {
+    action = `<button class="btn btn-dark" id="wish">${inWish?'On your wishlist':'Add to wishlist'}</button>`;
+    note = `<div class="note no">All ${b.copies} ${b.copies>1?'copies are':'copy is'} out. Next copy expected back <b>${fmt(nextReturn(b))}</b>.</div>`;
+  }
+  openModal(`<div class="det">
+    <div><img src="${b.img}" alt="${esc(b.title)} cover">${b.alt?`<div style="font-size:12px;color:var(--mute);margin-top:8px">2 editions on the shelf</div>`:''}</div>
+    <div>
+      <h3>${esc(b.title)}</h3><div class="by">by ${esc(b.author)}</div>${b.member?memLabel(b,'mem-big'):''}
+      <div style="margin-top:12px">${statusHTML(b)}</div>
+      <div class="kv">
+        <div><span>Genre</span><b>${esc(b.genre)}</b></div>
+        <div><span>Language</span><b>${esc(b.lang)}</b></div>
+        <div><span>Pages</span><b>${b.pages}</b></div>
+        <div><span>First published</span><b>${b.year}</b></div>
+        <div><span>Publisher</span><b>${esc(b.publisher)}</b></div>
+        <div><span>Owner</span><b>${esc(b.owner)}</b>${OWNERS[b.owner]?`<div style="font-size:12px;color:var(--mute)">${esc(OWNERS[b.owner])}</div>`:''}</div>
+      </div>
+      <p class="desc">${esc(b.desc)}</p>
+      <div class="holders"><div class="h">Copies · ${a} of ${b.copies} available</div>
+        ${b.loans.map((l,i)=>`<div class="c"><span>Copy ${i+1} · with <b>${esc(l.who)}</b></span><span>returns ${fmt(l.due)}</span></div>`).join('')}
+        ${Array.from({length:a},(_,i)=>`<div class="c"><span>Copy ${b.loans.length+i+1}</span><span style="color:var(--ok);font-weight:700">On the shelf</span></div>`).join('')}
+      </div>
+      ${note}<div id="msg"></div>
+      <div class="acts">${action}</div>
+    </div></div>`);
+  const br = $('#borrow');
+  if(br) br.onclick = () => {
+    if(!user){ openLogin(()=>openBook(id)); return; }
+    const n = myLoans().length;
+    if(n >= MAX_ACTIVE){
+      $('#msg').innerHTML = `<div class="warn"><div><b>You already borrowed ${n} books and have them active.</b> To get more books, return one of them first.</div></div>`;
+      return;
+    }
+    const due = new Date(TODAY); due.setDate(due.getDate()+14);
+    b.loans.push({who:user.name, id:user.id, from:TODAY.toISOString().slice(0,10), due:due.toISOString().slice(0,10)});
+    closeModal(); renderAll(); toast(`Borrowed “${b.title}”. Return by ${fmt(due)}.`);
+  };
+  const w = $('#wish');
+  if(w) w.onclick = () => {
+    if(!user){ openLogin(()=>openBook(id)); return; }
+    if(!inWish){ wishlist.push(id); store.set('wish',wishlist);
+      toast(`Added to wishlist — KalpaX AI will email ${user.email} when it's back (demo).`); }
+    renderMine(); openBook(id);
+  };
+}
+
+function openLogin(after){
+  openModal(`<div class="login">
+    <img src="assets/logo.jpg" alt="KalpaX">
+    <h3>Log in to KalpaX</h3><p>Use your KalpaX ID to borrow, wishlist and contribute books.</p>
+    <form id="lf">
+      <label class="fld"><span>KalpaX ID</span><input id="lid" autocomplete="username" placeholder="e.g. Kaxi1234" required></label>
+      <label class="fld"><span>KalpaX password</span><input id="lpw" type="password" autocomplete="current-password" required></label>
+      <div class="err" id="lerr"></div>
+      <button class="btn btn-red" style="width:100%;justify-content:center">Log in</button>
+    </form>
+    <div class="hint">Demo account — ID <b>Kaxi3520</b>, password <b>kaxi89929</b></div>
+  </div>`);
+  $('#lid').focus();
+  $('#lf').onsubmit = e => {
+    e.preventDefault();
+    const id = $('#lid').value.trim(), u = USERS[id];
+    if(!u || u.pass !== $('#lpw').value){ $('#lerr').textContent = 'Wrong KalpaX ID or password.'; return; }
+    user = {id, name:u.name, role:u.role, email:u.email}; store.set('user', user);
+    closeModal(); renderAll(); toast(`Welcome back, ${u.name}`);
+    if(after) after();
+  };
+}
+
+/* ============ filters ============ */
+[...new Set(BOOKS.map(b=>b.lang))].forEach(l=>$('#lang').insertAdjacentHTML('beforeend',`<option>${esc(l)}</option>`));
+$('#lang').onchange = e => { filter.lang=e.target.value; renderShelf(); };
+$('#q').oninput = e => { filter.q=e.target.value; renderShelf(); };
+document.querySelectorAll('#avSeg button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#avSeg button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  filter.av=b.dataset.v; renderShelf();
+});
+
+/* ============ AI chatbot (Grok) ============ */
+let apiKey = store.get('grokKey','');
+$('#model').value = store.get('grokModel','grok-3-mini');
+const history = [];
+function keyState(){ $('#keyState').textContent = apiKey ? 'Grok connected. Answers come from Grok using the live catalogue.' : 'Paste your Grok (xAI) API key to enable AI answers. Without a key, the assistant answers from the catalogue only.'; }
+$('#saveKey').onclick = () => { apiKey=$('#key').value.trim(); store.set('grokKey',apiKey); store.set('grokModel',$('#model').value.trim()); $('#key').value=''; keyState(); toast(apiKey?'Grok API key saved in this browser':'Key cleared'); };
+keyState();
+
+$('#fab').onclick = () => { $('#chat').classList.toggle('show'); if(!$('#msgs').children.length) say('b',`Hi${user?' '+user.name:''}! I'm the KalpaX book assistant. Ask me what's available, who has a book, when it's due back, or for a recommendation.`); };
+$('#chatX').onclick = () => $('#chat').classList.remove('show');
+document.querySelectorAll('#sugg button').forEach(b=>b.onclick=()=>ask(b.textContent));
+$('#cf').onsubmit = e => { e.preventDefault(); const v=$('#ci').value.trim(); if(v){ $('#ci').value=''; ask(v); } };
+
+function say(who, text){ const d=document.createElement('div'); d.className='mg '+who; d.textContent=text; $('#msgs').appendChild(d); $('#msgs').scrollTop=1e9; return d; }
+
+function catalogueText(){
+  return BOOKS.map(b=>`- ${b.title} | ${b.author} | ${b.genre} | ${b.lang} | ${b.pages}p | owner ${ownerLabel(b.owner)}${b.member?' | written by a KalpaX member':''} | ${avail(b)}/${b.copies} available` +
+    (b.loans.length ? ' | with: ' + b.loans.map(l=>`${l.who} (due ${l.due})`).join(', ') : '')).join('\n');
+}
+
+async function ask(q){
+  say('u', q);
+  history.push({role:'user', content:q});
+  const t = say('b','…');
+  if(!apiKey){ t.textContent = localAnswer(q); history.push({role:'assistant',content:t.textContent}); return; }
+  try{
+    const sys = `You are KalpaX AI, the assistant of the KalpaX community book library. Today is ${TODAY.toISOString().slice(0,10)}. Be brief and friendly.
+Only use this catalogue for availability, holders and due dates:\n${catalogueText()}
+Members may hold at most ${MAX_ACTIVE} books at once. ${user ? `The user is ${user.name} (${user.role}), ID ${user.id}, currently holding: ${myLoans().map(x=>x.b.title+' due '+x.l.due).join('; ')}. Wishlist: ${BOOKS.filter(b=>wishlist.includes(b.id)).map(b=>b.title).join(', ')||'empty'}. If asked, say you will email ${user.email} when a wishlisted book is available.` : 'The user is not logged in; to borrow they must log in with a KalpaX ID.'}`;
+    const r = await fetch('https://api.x.ai/v1/chat/completions', {
+      method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
+      body: JSON.stringify({ model: store.get('grokModel','grok-3-mini') || 'grok-3-mini', messages:[{role:'system',content:sys}, ...history.slice(-10)], temperature:0.4 })
+    });
+    const j = await r.json();
+    if(!r.ok) throw new Error(j.error?.message || j.error || ('HTTP '+r.status));
+    t.textContent = j.choices[0].message.content.trim();
+  }catch(err){
+    t.textContent = `(Grok error: ${err.message}) Here's what the catalogue says:\n\n` + localAnswer(q);
+  }
+  history.push({role:'assistant', content:t.textContent});
+}
+
+// offline fallback: answers straight from the catalogue
+function localAnswer(q){
+  const s = q.toLowerCase();
+  const hit = BOOKS.filter(b => s.includes(b.title.toLowerCase().split(' (')[0].replace(/^the /,'')) || b.title.toLowerCase().split(/[ (]/).filter(w=>w.length>4).some(w=>s.includes(w)) && s.split(' ').filter(w=>w.length>4).some(w=>b.title.toLowerCase().includes(w)));
+  if(hit.length){
+    return hit.slice(0,3).map(b => avail(b)>0
+      ? `“${b.title}” by ${b.author} is available — ${avail(b)} of ${b.copies} on the shelf (owner ${ownerLabel(b.owner)}).`
+      : `“${b.title}” is out. ` + b.loans.map(l=>`${l.who} has a copy, due back ${fmt(l.due)}`).join('; ') + '. Add it to your wishlist and I\'ll email you when it\'s back.').join('\n\n');
+  }
+  const g = Object.keys(GENRES).find(g=>s.includes(g.toLowerCase().split(' ')[0]));
+  const lang = s.includes('tamil') ? 'Tamil' : null;
+  let bs = BOOKS.filter(b=>(!g||b.genre===g)&&(!lang||b.lang===lang));
+  if(s.includes('available')) bs = bs.filter(b=>avail(b)>0);
+  if(s.match(/my|borrowed|due/) && user){ const m=myLoans(); return m.length ? `You have ${m.length} books:\n`+m.map(x=>`• ${x.b.title} — return by ${fmt(x.l.due)}`).join('\n') + (m.length>=MAX_ACTIVE?`\n\nThat's the ${MAX_ACTIVE}-book limit — return one to borrow more.`:'') : 'You have no books borrowed.'; }
+  if(g || lang || s.includes('available') || s.includes('suggest') || s.includes('recommend')){
+    if(!bs.length) return 'Nothing matches right now.';
+    return (g||lang?`${lang||g} books`:'Books')+`${s.includes('available')?' available now':''}:\n` + bs.slice(0,6).map(b=>`• ${b.title} — ${b.author} (${avail(b)>0?'available':'out until '+fmt(nextReturn(b))})`).join('\n');
+  }
+  return 'I can tell you which books are available, who has a book and when it\'s due, or suggest a book by topic. (Add a Grok API key above for full AI answers.)';
+}
+
+renderAll();
+</script>
+</body>
+</html>
