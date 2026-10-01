@@ -254,7 +254,7 @@ footer{padding:40px 0 100px;color:var(--mute);font-size:13px;text-align:center}
   <div class="ch"><span class="dot"></span><b>KalpaX AI · Book assistant</b><button id="chatX">✕</button></div>
   <div class="keybox">
     <span id="keyState">Paste your Grok (xAI) API key to enable AI answers. Without a key, the assistant answers from the catalogue only.</span>
-    <div class="r"><input id="key" type="password" placeholder="xai-…"><input id="model" style="max-width:110px" value="grok-3-mini" title="Grok model"><button id="saveKey">Save</button></div>
+    <div class="r"><input id="key" type="password" placeholder="gsk_… or xai-…"><input id="model" style="max-width:110px" value="grok-3-mini" title="Grok model"><button id="saveKey">Save</button></div>
   </div>
   <div class="msgs" id="msgs"></div>
   <div class="sugg" id="sugg">
@@ -266,6 +266,7 @@ footer{padding:40px 0 100px;color:var(--mute);font-size:13px;text-align:center}
 </div>
 <div class="toast" id="toast"></div>
 
+<script src="config.local.js"></script>
 <script>
 /* ============ "Backend" (demo data, in-browser) ============ */
 const TODAY = new Date('2026-10-01');
@@ -558,10 +559,16 @@ document.querySelectorAll('#avSeg button').forEach(b=>b.onclick=()=>{
 });
 
 /* ============ AI chatbot (Grok) ============ */
-let apiKey = store.get('grokKey','');
-$('#model').value = store.get('grokModel','grok-3-mini');
+const SECRET = window.KALPAX_SECRET || {};
+let apiKey = SECRET.apiKey || store.get('grokKey','');
+// key prefix picks the provider: gsk_ = Groq, xai- = xAI Grok
+const provider = () => apiKey.startsWith('gsk_')
+  ? { name:'Groq', url:'https://api.groq.com/openai/v1/chat/completions', model:'llama-3.3-70b-versatile' }
+  : { name:'Grok', url:'https://api.x.ai/v1/chat/completions', model:'grok-3-mini' };
+if(SECRET.model) store.set('grokModel', SECRET.model);
+$('#model').value = store.get('grokModel','') || provider().model;
 const history = [];
-function keyState(){ $('#keyState').textContent = apiKey ? 'Grok connected. Answers come from Grok using the live catalogue.' : 'Paste your Grok (xAI) API key to enable AI answers. Without a key, the assistant answers from the catalogue only.'; }
+function keyState(){ $('#keyState').textContent = apiKey ? `${provider().name} connected${SECRET.apiKey?' (from config.local.js)':''}. Answers use the live catalogue.` : 'Paste your Groq or Grok API key to enable AI answers. Without a key, the assistant answers from the catalogue only.'; }
 $('#saveKey').onclick = () => { apiKey=$('#key').value.trim(); store.set('grokKey',apiKey); store.set('grokModel',$('#model').value.trim()); $('#key').value=''; keyState(); toast(apiKey?'Grok API key saved in this browser':'Key cleared'); };
 keyState();
 
@@ -586,15 +593,15 @@ async function ask(q){
     const sys = `You are KalpaX AI, the assistant of the KalpaX community book library. Today is ${TODAY.toISOString().slice(0,10)}. Be brief and friendly.
 Only use this catalogue for availability, holders and due dates:\n${catalogueText()}
 Members may hold at most ${MAX_ACTIVE} books at once. ${user ? `The user is ${user.name} (${user.role}), ID ${user.id}, currently holding: ${myLoans().map(x=>x.b.title+' due '+x.l.due).join('; ')}. Wishlist: ${BOOKS.filter(b=>wishlist.includes(b.id)).map(b=>b.title).join(', ')||'empty'}. If asked, say you will email ${user.email} when a wishlisted book is available.` : 'The user is not logged in; to borrow they must log in with a KalpaX ID.'}`;
-    const r = await fetch('https://api.x.ai/v1/chat/completions', {
+    const r = await fetch(provider().url, {
       method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
-      body: JSON.stringify({ model: store.get('grokModel','grok-3-mini') || 'grok-3-mini', messages:[{role:'system',content:sys}, ...history.slice(-10)], temperature:0.4 })
+      body: JSON.stringify({ model: store.get('grokModel','') || provider().model, messages:[{role:'system',content:sys}, ...history.slice(-10)], temperature:0.4 })
     });
     const j = await r.json();
     if(!r.ok) throw new Error(j.error?.message || j.error || ('HTTP '+r.status));
     t.textContent = j.choices[0].message.content.trim();
   }catch(err){
-    t.textContent = `(Grok error: ${err.message}) Here's what the catalogue says:\n\n` + localAnswer(q);
+    t.textContent = `(${provider().name} error: ${err.message}) Here's what the catalogue says:\n\n` + localAnswer(q);
   }
   history.push({role:'assistant', content:t.textContent});
 }
