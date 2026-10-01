@@ -571,6 +571,10 @@ const history = [];
 function keyState(){ $('#keyState').textContent = apiKey ? `${provider().name} connected${SECRET.apiKey?' (from config.local.js)':''}. Answers use the live catalogue.` : 'Paste your Groq or Grok API key to enable AI answers. Without a key, the assistant answers from the catalogue only.'; }
 $('#saveKey').onclick = () => { apiKey=$('#key').value.trim(); store.set('grokKey',apiKey); store.set('grokModel',$('#model').value.trim()); $('#key').value=''; keyState(); toast(apiKey?'Grok API key saved in this browser':'Key cleared'); };
 keyState();
+// on Render the server holds the key (AI_API_KEY env var); the browser never sees it
+let serverAI = null;
+fetch('api/config').then(r=>r.ok?r.json():null).then(c=>{ if(c && c.serverAI){ serverAI=c.provider;
+  if(!apiKey) $('#keyState').textContent = `${serverAI} connected on the server. Answers use the live catalogue.`; } }).catch(()=>{});
 
 $('#fab').onclick = () => { $('#chat').classList.toggle('show'); if(!$('#msgs').children.length) say('b',`Hi${user?' '+user.name:''}! I'm the KalpaX book assistant. Ask me what's available, who has a book, when it's due back, or for a recommendation.`); };
 $('#chatX').onclick = () => $('#chat').classList.remove('show');
@@ -588,11 +592,19 @@ async function ask(q){
   say('u', q);
   history.push({role:'user', content:q});
   const t = say('b','…');
-  if(!apiKey){ t.textContent = localAnswer(q); history.push({role:'assistant',content:t.textContent}); return; }
+  if(!apiKey && !serverAI){ t.textContent = localAnswer(q); history.push({role:'assistant',content:t.textContent}); return; }
   try{
     const sys = `You are KalpaX AI, the assistant of the KalpaX community book library. Today is ${TODAY.toISOString().slice(0,10)}. Be brief and friendly.
 Only use this catalogue for availability, holders and due dates:\n${catalogueText()}
 Members may hold at most ${MAX_ACTIVE} books at once. ${user ? `The user is ${user.name} (${user.role}), ID ${user.id}, currently holding: ${myLoans().map(x=>x.b.title+' due '+x.l.due).join('; ')}. Wishlist: ${BOOKS.filter(b=>wishlist.includes(b.id)).map(b=>b.title).join(', ')||'empty'}. If asked, say you will email ${user.email} when a wishlisted book is available.` : 'The user is not logged in; to borrow they must log in with a KalpaX ID.'}`;
+    if(!apiKey){
+      const r = await fetch('api/chat', { method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ messages:[{role:'system',content:sys}, ...history.slice(-10)] }) });
+      const j = await r.json();
+      if(!r.ok) throw new Error(j.error || ('HTTP '+r.status));
+      t.textContent = j.reply.trim();
+      history.push({role:'assistant', content:t.textContent}); return;
+    }
     const r = await fetch(provider().url, {
       method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
       body: JSON.stringify({ model: store.get('grokModel','') || provider().model, messages:[{role:'system',content:sys}, ...history.slice(-10)], temperature:0.4 })
@@ -601,7 +613,7 @@ Members may hold at most ${MAX_ACTIVE} books at once. ${user ? `The user is ${us
     if(!r.ok) throw new Error(j.error?.message || j.error || ('HTTP '+r.status));
     t.textContent = j.choices[0].message.content.trim();
   }catch(err){
-    t.textContent = `(${provider().name} error: ${err.message}) Here's what the catalogue says:\n\n` + localAnswer(q);
+    t.textContent = `(${apiKey?provider().name:serverAI} error: ${err.message}) Here's what the catalogue says:\n\n` + localAnswer(q);
   }
   history.push({role:'assistant', content:t.textContent});
 }
