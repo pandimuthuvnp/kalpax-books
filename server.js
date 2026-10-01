@@ -90,7 +90,7 @@ http.createServer((req, res) => {
   if (!file.startsWith(ROOT) || BLOCKED.has(path.basename(file)) || rel.startsWith('.git')) return send(res, 404, 'Not found', 'text/plain');
   fs.readFile(file, (err, data) => {
     if (err) return send(res, 404, 'Not found', 'text/plain');
-    res.writeHead(200, { 'Content-Type': TYPES[path.extname(file).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'public, max-age=300' });
+    res.writeHead(200, { 'Content-Type': TYPES[path.extname(file).toLowerCase()] || 'application/octet-stream', 'Cache-Control': file.endsWith('.html') ? 'no-cache' : 'public, max-age=300' });
     res.end(data);
   });
 }).listen(PORT, () => { console.log(`KalpaX Books on :${PORT} — server AI: ${provider()?.name || 'off'}`); if (provider()) modelList(provider()); });
