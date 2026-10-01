@@ -597,7 +597,7 @@ async function ask(q){
   const t = say('b','…');
   if(!apiKey && !serverAI){ t.textContent = localAnswer(q); history.push({role:'assistant',content:t.textContent}); return; }
   try{
-    const sys = `You are KalpaX AI, the assistant of the KalpaX community book library. Today is ${TODAY.toISOString().slice(0,10)}. Be brief and friendly.
+    const sys = `You are KalpaX AI, the assistant of the KalpaX community book library. Today is ${TODAY.toISOString().slice(0,10)}. Be brief and friendly. Reply in a few short sentences or a simple '- ' bullet list; never use tables, headings or code blocks (the chat window is small).
 Only use this catalogue for availability, holders and due dates:\n${catalogueText()}
 Members may hold at most ${MAX_ACTIVE} books at once. ${user ? `The user is ${user.name} (${user.role}), ID ${user.id}, currently holding: ${myLoans().map(x=>x.b.title+' due '+x.l.due).join('; ')}. Wishlist: ${BOOKS.filter(b=>wishlist.includes(b.id)).map(b=>b.title).join(', ')||'empty'}. If asked, say you will email ${user.email} when a wishlisted book is available.` : 'The user is not logged in; to borrow they must log in with a KalpaX ID.'}`;
     if(!apiKey){
