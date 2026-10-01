@@ -574,7 +574,7 @@ keyState();
 // on Render the server holds the key (AI_API_KEY env var); the browser never sees it
 let serverAI = null;
 fetch('api/config').then(r=>r.ok?r.json():null).then(c=>{ if(c && c.serverAI){ serverAI=c.provider;
-  if(!apiKey) $('#keyState').textContent = `${serverAI} connected on the server. Answers use the live catalogue.`; } }).catch(()=>{});
+  if(!apiKey){ $('#keyState').textContent = `${serverAI} connected on the server.`; document.querySelector('.keybox .r').style.display='none'; } } }).catch(()=>{});
 
 $('#fab').onclick = () => { $('#chat').classList.toggle('show'); if(!$('#msgs').children.length) say('b',`Hi${user?' '+user.name:''}! I'm the KalpaX book assistant. Ask me what's available, who has a book, when it's due back, or for a recommendation.`); };
 $('#chatX').onclick = () => $('#chat').classList.remove('show');
@@ -636,7 +636,7 @@ function localAnswer(q){
     if(!bs.length) return 'Nothing matches right now.';
     return (g||lang?`${lang||g} books`:'Books')+`${s.includes('available')?' available now':''}:\n` + bs.slice(0,6).map(b=>`• ${b.title} — ${b.author} (${avail(b)>0?'available':'out until '+fmt(nextReturn(b))})`).join('\n');
   }
-  return 'I can tell you which books are available, who has a book and when it\'s due, or suggest a book by topic. (Add a Grok API key above for full AI answers.)';
+  return 'I can tell you which books are available, who has a book and when it\'s due, or suggest a book by topic. ';
 }
 
 renderAll();
