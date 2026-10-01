@@ -581,6 +581,9 @@ $('#chatX').onclick = () => $('#chat').classList.remove('show');
 document.querySelectorAll('#sugg button').forEach(b=>b.onclick=()=>ask(b.textContent));
 $('#cf').onsubmit = e => { e.preventDefault(); const v=$('#ci').value.trim(); if(v){ $('#ci').value=''; ask(v); } };
 
+// light markdown for AI replies: **bold**, *italic*, "- " bullets; everything escaped first
+const md = t => esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|\s)\*(\S.*?)\*/g,'$1<i>$2</i>').replace(/^\s*[-*] /gm,'• ');
+function setReply(el, text){ el.innerHTML = md(text); }
 function say(who, text){ const d=document.createElement('div'); d.className='mg '+who; d.textContent=text; $('#msgs').appendChild(d); $('#msgs').scrollTop=1e9; return d; }
 
 function catalogueText(){
@@ -602,7 +605,7 @@ Members may hold at most ${MAX_ACTIVE} books at once. ${user ? `The user is ${us
         body: JSON.stringify({ messages:[{role:'system',content:sys}, ...history.slice(-10)] }) });
       const j = await r.json();
       if(!r.ok) throw new Error(j.error || ('HTTP '+r.status));
-      t.textContent = j.reply.trim();
+      t.textContent = j.reply.trim(); setReply(t, t.textContent);
       history.push({role:'assistant', content:t.textContent}); return;
     }
     const r = await fetch(provider().url, {
@@ -611,7 +614,7 @@ Members may hold at most ${MAX_ACTIVE} books at once. ${user ? `The user is ${us
     });
     const j = await r.json();
     if(!r.ok) throw new Error(j.error?.message || j.error || ('HTTP '+r.status));
-    t.textContent = j.choices[0].message.content.trim();
+    t.textContent = j.choices[0].message.content.trim(); setReply(t, t.textContent);
   }catch(err){
     t.textContent = `(${apiKey?provider().name:serverAI} error: ${err.message}) Here's what the catalogue says:\n\n` + localAnswer(q);
   }
